@@ -1,5 +1,5 @@
 import { motion } from "framer-motion";
-import { Heart, Calendar } from "lucide-react";
+import { Heart } from "lucide-react";
 
 interface TimelinePageProps {
   date: string;
@@ -32,18 +32,6 @@ const TimelinePage = ({ date, title, description, photoPlaceholder, pageNumber }
         <Heart className="h-5 w-5 fill-current opacity-60" />
       </motion.div>
 
-      {/* Date badge */}
-      <motion.div 
-        className="mb-4 flex items-center gap-2"
-        initial={{ opacity: 0, x: -20 }}
-        animate={{ opacity: 1, x: 0 }}
-        transition={{ duration: 0.5, delay: 0.2 }}
-      >
-        <div className="flex items-center gap-2 rounded-full bg-dusty-rose/30 px-4 py-1">
-          <Calendar className="h-4 w-4 text-burgundy" />
-          <span className="font-casual text-lg text-burgundy">{date}</span>
-        </div>
-      </motion.div>
 
       {/* Title */}
       <motion.h2 
