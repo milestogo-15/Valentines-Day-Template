@@ -13,6 +13,11 @@ export default {
       },
     },
     extend: {
+      fontFamily: {
+        handwritten: ['Dancing Script', 'cursive'],
+        casual: ['Caveat', 'cursive'],
+        elegant: ['Playfair Display', 'serif'],
+      },
       colors: {
         border: "hsl(var(--border))",
         input: "hsl(var(--input))",
@@ -57,6 +62,15 @@ export default {
           border: "hsl(var(--sidebar-border))",
           ring: "hsl(var(--sidebar-ring))",
         },
+        // Custom vintage colors
+        cream: "hsl(var(--cream))",
+        "dusty-rose": "hsl(var(--dusty-rose))",
+        burgundy: "hsl(var(--burgundy))",
+        "antique-brown": "hsl(var(--antique-brown))",
+        "soft-pink": "hsl(var(--soft-pink))",
+        "aged-paper": "hsl(var(--aged-paper))",
+        tape: "hsl(var(--tape))",
+        "wax-seal": "hsl(var(--wax-seal))",
       },
       borderRadius: {
         lg: "var(--radius)",
