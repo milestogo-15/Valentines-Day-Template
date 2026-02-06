@@ -2,35 +2,43 @@ import { useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { Heart, Sparkles } from "lucide-react";
 import { Button } from "@/components/ui/button";
-import {
-  AlertDialog,
-  AlertDialogAction,
-  AlertDialogContent,
-  AlertDialogDescription,
-  AlertDialogFooter,
-  AlertDialogHeader,
-  AlertDialogTitle,
-} from "@/components/ui/alert-dialog";
 
 interface BigAskPageProps {
   onYes: () => void;
 }
 
 const BigAskPage = ({ onYes }: BigAskPageProps) => {
-  const [showNoDialog, setShowNoDialog] = useState(false);
   const [answered, setAnswered] = useState(false);
+  const [noPosition, setNoPosition] = useState({ x: 0, y: 0 });
+  const [runAwayCount, setRunAwayCount] = useState(0);
+
+  const funnyMessages = [
+    "Nice try! 😜",
+    "Nope, can't catch me!",
+    "Think again! 💕",
+    "Really? Try the other button!",
+    "I'm too fast for you! 🏃‍♀️",
+    "Just say Yes already! 😄",
+  ];
 
   const handleYes = () => {
     setAnswered(true);
     onYes();
   };
 
-  const handleNo = () => {
-    setShowNoDialog(true);
+  const handleNoHover = () => {
+    // Make the button run away to a random position
+    const maxX = 100;
+    const maxY = 80;
+    const newX = (Math.random() - 0.5) * maxX;
+    const newY = (Math.random() - 0.5) * maxY;
+    
+    setNoPosition({ x: newX, y: newY });
+    setRunAwayCount(prev => prev + 1);
   };
 
   return (
-    <div className="relative flex h-full w-full flex-col items-center justify-center p-6 sm:p-8">
+    <div className="relative flex h-full w-full flex-col items-center justify-center overflow-hidden p-6 sm:p-8">
       {/* Decorative hearts around the page */}
       {[...Array(6)].map((_, i) => (
         <motion.div
@@ -95,9 +103,25 @@ const BigAskPage = ({ onYes }: BigAskPageProps) => {
               <Heart className="mx-auto h-16 w-16 fill-primary text-primary sm:h-20 sm:w-20" />
             </motion.div>
 
+            {/* Funny message when No runs away */}
+            <AnimatePresence>
+              {runAwayCount > 0 && (
+                <motion.p
+                  key={runAwayCount}
+                  className="mb-4 font-casual text-lg text-dusty-rose"
+                  initial={{ opacity: 0, y: 10 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  exit={{ opacity: 0 }}
+                  transition={{ duration: 0.3 }}
+                >
+                  {funnyMessages[(runAwayCount - 1) % funnyMessages.length]}
+                </motion.p>
+              )}
+            </AnimatePresence>
+
             {/* Buttons */}
             <motion.div 
-              className="flex flex-col gap-4 sm:flex-row sm:gap-6"
+              className="relative flex flex-col items-center gap-4 sm:flex-row sm:gap-6"
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.5, delay: 0.4 }}
@@ -108,13 +132,21 @@ const BigAskPage = ({ onYes }: BigAskPageProps) => {
               >
                 Yes! 💕
               </Button>
-              <Button
-                onClick={handleNo}
-                variant="outline"
-                className="border-dusty-rose px-10 py-6 font-handwritten text-xl text-burgundy hover:bg-dusty-rose/20"
+              
+              {/* Playful No button that runs away */}
+              <motion.div
+                animate={{ x: noPosition.x, y: noPosition.y }}
+                transition={{ type: "spring", stiffness: 300, damping: 20 }}
               >
-                No...
-              </Button>
+                <Button
+                  onMouseEnter={handleNoHover}
+                  onTouchStart={handleNoHover}
+                  variant="outline"
+                  className="border-dusty-rose px-10 py-6 font-handwritten text-xl text-burgundy hover:bg-dusty-rose/20"
+                >
+                  No...
+                </Button>
+              </motion.div>
             </motion.div>
           </motion.div>
         ) : (
@@ -144,28 +176,6 @@ const BigAskPage = ({ onYes }: BigAskPageProps) => {
           </motion.div>
         )}
       </AnimatePresence>
-
-      {/* Funny "No" dialog */}
-      <AlertDialog open={showNoDialog} onOpenChange={setShowNoDialog}>
-        <AlertDialogContent className="paper-texture border-2 border-dusty-rose">
-          <AlertDialogHeader>
-            <AlertDialogTitle className="font-handwritten text-2xl text-burgundy">
-              Are you sure? 🥺
-            </AlertDialogTitle>
-            <AlertDialogDescription className="font-casual text-lg text-antique-brown">
-              My heart says you should try again... Pretty please? 💕
-            </AlertDialogDescription>
-          </AlertDialogHeader>
-          <AlertDialogFooter>
-            <AlertDialogAction 
-              onClick={() => setShowNoDialog(false)}
-              className="bg-burgundy font-handwritten text-cream hover:bg-burgundy/90"
-            >
-              Okay, let me reconsider 💝
-            </AlertDialogAction>
-          </AlertDialogFooter>
-        </AlertDialogContent>
-      </AlertDialog>
 
       {/* Corner decorations */}
       <div className="absolute left-4 top-4 h-8 w-8 border-l-2 border-t-2 border-dusty-rose opacity-50" />
