@@ -120,42 +120,46 @@ const ScrapbookContainer = () => {
       {/* Hearts celebration overlay */}
       {showCelebration && <HeartsCelebration />}
 
-      {/* Book container */}
-      <div className="book-container relative w-full max-w-lg">
-        {/* The scrapbook page */}
-        <AnimatePresence mode="wait" custom={direction}>
-          <motion.div
-            key={currentPage}
-            custom={direction}
-            variants={pageVariants}
-            initial="enter"
-            animate="center"
-            exit="exit"
-            transition={{
-              duration: 0.5,
-              ease: "easeInOut",
-            }}
-            className="scrapbook-page relative aspect-[3/4] w-full overflow-hidden"
-          >
-            {renderPage()}
-          </motion.div>
-        </AnimatePresence>
-
-        {/* Navigation buttons - only show after opening */}
+      {/* Book container with side navigation */}
+      <div className="relative flex w-full max-w-2xl items-center justify-center gap-2 sm:gap-4">
+        {/* Left navigation button */}
         {currentPage > 0 && (
-          <div className="mt-6 flex items-center justify-between">
-            <Button
-              onClick={handlePrevPage}
-              variant="ghost"
-              className="gap-1 font-casual text-burgundy hover:bg-dusty-rose/20"
-              disabled={currentPage === 0}
-            >
-              <ChevronLeft className="h-4 w-4" />
-              Previous
-            </Button>
+          <Button
+            onClick={handlePrevPage}
+            variant="ghost"
+            size="icon"
+            className="h-10 w-10 shrink-0 rounded-full text-burgundy hover:bg-dusty-rose/20 sm:h-12 sm:w-12"
+            disabled={currentPage === 0}
+          >
+            <ChevronLeft className="h-5 w-5 sm:h-6 sm:w-6" />
+          </Button>
+        )}
+        {/* Spacer when on cover page */}
+        {currentPage === 0 && <div className="w-10 sm:w-12" />}
 
-            {/* Page indicator */}
-            <div className="flex items-center gap-1">
+        {/* The scrapbook page */}
+        <div className="book-container w-full max-w-lg">
+          <AnimatePresence mode="wait" custom={direction}>
+            <motion.div
+              key={currentPage}
+              custom={direction}
+              variants={pageVariants}
+              initial="enter"
+              animate="center"
+              exit="exit"
+              transition={{
+                duration: 0.5,
+                ease: "easeInOut",
+              }}
+              className="scrapbook-page relative aspect-[3/4] w-full overflow-hidden"
+            >
+              {renderPage()}
+            </motion.div>
+          </AnimatePresence>
+
+          {/* Page indicator - only show after opening */}
+          {currentPage > 0 && (
+            <div className="mt-4 flex items-center justify-center gap-1">
               {Array.from({ length: totalPages - 1 }, (_, i) => (
                 <div
                   key={i}
@@ -167,18 +171,23 @@ const ScrapbookContainer = () => {
                 />
               ))}
             </div>
+          )}
+        </div>
 
-            <Button
-              onClick={handleNextPage}
-              variant="ghost"
-              className="gap-1 font-casual text-burgundy hover:bg-dusty-rose/20"
-              disabled={currentPage === totalPages - 1}
-            >
-              Next
-              <ChevronRight className="h-4 w-4" />
-            </Button>
-          </div>
+        {/* Right navigation button */}
+        {currentPage > 0 && (
+          <Button
+            onClick={handleNextPage}
+            variant="ghost"
+            size="icon"
+            className="h-10 w-10 shrink-0 rounded-full text-burgundy hover:bg-dusty-rose/20 sm:h-12 sm:w-12"
+            disabled={currentPage === totalPages - 1}
+          >
+            <ChevronRight className="h-5 w-5 sm:h-6 sm:w-6" />
+          </Button>
         )}
+        {/* Spacer when on cover page */}
+        {currentPage === 0 && <div className="w-10 sm:w-12" />}
       </div>
 
       {/* Footer hint */}
